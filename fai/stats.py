@@ -48,12 +48,12 @@ def pearson(x, y, without_zero=False):
     return stats.pearsonr(x, y)
 
 
-def mean(image, without_zero=False, roundval=None):
+def mean(array, without_zero=False, roundval=None):
     """Calculate the mean value of an array.
 
     Parameters
     ----------
-    image : (N, M) numpy array
+    array : (N, M) numpy array
 
     without_zero : bool
         if `without_zero` is True:
@@ -63,71 +63,65 @@ def mean(image, without_zero=False, roundval=None):
             mean of all the values of the array, including the zeros.
 
     roundval : int
-        Round off the decimal points of each element.
+        Round off the decimal points of the output.
 
     Returns
     -------
     mean : float
     """
 
-    image = np.float(image)
+    array = np.float(array)
 
     if without_zero:
-        image = util.ignore_zero(image)
+        array = util.ignore_zero(array)
 
     if roundval is not None:
-        return round(np.mean(image), roundval)
+        return round(np.mean(array), roundval)
 
-    return np.mean(image)
+    return np.mean(array)
 
 
-def median(image, without_zero=False, roundval=None):
+def median(array, without_zero=False, roundval=None):
     """Calculate the median value of an array.
 
     Parameters
     ----------
-    image : (N, M) numpy array
+    array : (N, M) numpy array
 
     without_zero : bool
-
-    roundval : int
-        Round off the decimal points of each element.
-
-    Returns
-    -------
-    median : float
         if `without_zero` is True:
             median of all the values of the array, without counting the zeros.
 
         if `without_zero` is False
             median of all the values of the array, including the zeros.
+
+    roundval : int
+        Round off the decimal points of the output.
+
+    Returns
+    -------
+    median : float
+
     """
-    image = np.float(image)
+    array = np.float(array)
 
     if without_zero:
-        image = util.ignore_zero(image)
+        array = util.ignore_zero(array)
 
     if roundval is not None:
-        return round(np.median(image), roundval)
+        return round(np.median(array), roundval)
 
-    return np.median(image)
+    return np.median(array)
 
 
-def std(image):
+def std(array):
     """Calculate the standard deviation value of an array.
 
     Parameters
     ----------
-    image : (N, M) numpy array
+    array : (N, M) numpy array
 
     without_zero : bool
-
-    roundval : int
-        Round off the decimal points of each element.
-
-    Returns
-    -------
-    standard deviation : float
         if `without_zero` is True:
             standard deviation of all the values of the array, without
             counting the zeros.
@@ -135,6 +129,48 @@ def std(image):
         if `without_zero` is False
             standard deviation of all the values of the array, including
             the zeros.
+
+    roundval : int
+        Round off the decimal points of the output.
+
+    Returns
+    -------
+    standard deviation : float
+    """
+    array = np.float(array)
+
+    if without_zero:
+        array = util.ignore_zero(array)
+
+    if roundval is not None:
+        return round(np.std(array), roundval)
+
+    return np.std(array)
+
+
+def sem(array, without_zero=False):
+    """Calculate the standard error in mean for an array.
+
+    Parameters
+    ----------
+    array : (N,) numpy array
+
+    without_zero : bool
+        if `without_zero` is True:
+            standard error of all the values of the array, without
+            counting the zeros.
+
+        if `without_zero` is False
+            standard error of all the values of the array, including
+            the zeros.
+
+    roundval : int
+        Round off the decimal points of the output.
+
+    Returns
+    -------
+    standard error : float
+        The standard error in mean for the given array
     """
     image = np.float(image)
 
@@ -142,6 +178,6 @@ def std(image):
         image = util.ignore_zero(image)
 
     if roundval is not None:
-        return round(np.std(image), roundval)
+        return round(stats.sem(image), roundval)
 
-    return np.std(image)
+    return stats.sem(image)
