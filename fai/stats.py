@@ -172,12 +172,12 @@ def sem(array, without_zero=False):
     standard error : float
         The standard error in mean for the given array
     """
-    image = np.float(image)
+    array = np.float(array)
 
     if without_zero:
-        image = util.ignore_zero(image)
+        array = util.ignore_zero(array)
 
     if roundval is not None:
-        return round(stats.sem(image), roundval)
+        return round(stats.sem(array), roundval)
 
-    return stats.sem(image)
+    return stats.sem(array)
