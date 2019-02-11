@@ -1,7 +1,31 @@
+from dataclasses import dataclass
 import os
 import glob
 import tifffile
 import numpy as np
+
+
+@dataclass
+class AnisotropyData:
+    filename: str
+
+    raw_data: np.ndarray
+
+    parallel: np.ndarray = None
+    perpendicular: np.ndarray = None
+
+    parallel_cell: np.ndarray = None
+    perpendicular_cell: np.ndarray = None
+
+    anisotropy: np.ndarray = None
+
+    means: list = None
+    medians: list = None
+
+    means_norm: list = None
+    median_norm: list = None
+
+    metadata: dict = None
 
 
 def only(file_list, keyword):
@@ -134,13 +158,14 @@ def imread(filename):
 
     Returns
     -------
-    image : N-dimensional numpy array.
+    dataclass
 
     Notes
     -----
     The images can be opened and analysed as floating point numbers.
     """
-    return tifffile.imread(filename).astype(np.int16)
+    raw_data = tifffile.imread(filename).astype(np.int16)
+    return AnisotropyData(filename=filename, raw_data=raw_data)
 
 
 def imsave(array, filename):
@@ -148,7 +173,7 @@ def imsave(array, filename):
 
     Parameters
     ----------
-    image : N-dimensional numpy array
+    array : N-dimensional numpy array
         Image file that has to be saved.
 
     filename : str
