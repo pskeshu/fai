@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.widgets import Slider
+from matplotlib.widgets import Slider, RectangleSelector
 
 
 def create_circular_mask(images, centers, radius):
@@ -125,3 +125,91 @@ def roi_circle(img, radius=10):
         return None, None
     mask = create_circular_mask(img, centers, radius)
     return mask * img, np.array(centers)
+
+
+def create_rectangular_mask(image, click, release):
+    """
+    Given the edges, crop a rectangular region from an image.
+
+    Parameters
+    ----------
+    image : (S, N, M) numpy array
+        Image that needs to be cropped
+
+    click : (2,) array or list
+        Starting coords of the diagonal of the rectangle
+
+    release : (2,) array or list
+        Ending coords of the diagonal of the rectangle
+
+    Returns
+    -------
+    roi : (S, N, M) numpy array
+        Segmented RoI
+    """
+    x1, y1 = click
+    x2, y2 = release
+    return image[:,  y1:y2, x1:x2]
+
+
+def roi_rectangle(img):
+    """
+    Click to interactively draw a rectangular RoI for a stack of images.
+
+    Parameters
+    ----------
+    img : (S, N, M) numpy array
+        Images for which to draw RoI
+
+    Returns
+    -------
+    roi : (S, N, M) numpy array
+        Segmented RoI
+    """
+    if img.ndim is not 3:
+        raise ValueError("Not a 3D image.")
+
+    click = [None, None]
+    release = [None, None]
+
+    def on_press(event):
+        if event.inaxes is not ax:
+            return
+
+        if event.inaxes is zbox:
+            return
+
+        if fig.canvas.manager.toolbar._active is not None:
+            return
+
+    def update_image(num):
+        num = int(num)
+        image = np.squeeze(img[num:num+1])
+        image_ax.set_data(image)
+        fig.canvas.draw_idle()
+
+    def line_select_callback(eclick, erelease):
+        click[:] = eclick.xdata, eclick.ydata
+        release[:] = erelease.xdata, erelease.ydata
+
+    fig, ax = plt.subplots()
+    plt.subplots_adjust(bottom=0.2)
+
+    image_ax = ax.imshow(img[0], cmap=plt.cm.gray)
+    ax.axis("off")
+
+    zbox = plt.axes([0.1, 0.05, 0.8, 0.025])
+
+    zslide = Slider(zbox, 'Z', 0, img.shape[0] - 1, valinit=0, valfmt="%i")
+    zslide.on_changed(update_image)
+
+    cid = fig.canvas.mpl_connect('button_press_event', on_press)
+    rs_selector = RectangleSelector(ax, line_select_callback,
+                                        drawtype="box", interactive=True)
+    plt.show()
+
+    click = list(map(int, click))
+    release = list(map(int, release))
+
+    roi = create_rectangular_mask(img, click, release)
+    return roi, [click, release]
