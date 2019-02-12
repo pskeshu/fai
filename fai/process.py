@@ -3,7 +3,7 @@ from skimage import filters, segmentation, morphology
 
 
 def otsu(image):
-    """Function that calculates Otsu's threshold for a given image.
+    """Calculate Otsu's threshold for a given image.
 
     Parameters
     ----------
@@ -20,7 +20,7 @@ def otsu(image):
 
 
 def median(image, **kwds):
-    """Applies a median filter to the image.
+    """Apply a median filter to the image.
 
     Parameters
     ----------
@@ -36,7 +36,7 @@ def median(image, **kwds):
 
 
 def gaussian(image, **kwds):
-    """Applies a gaussian filter to the image.
+    """Apply a gaussian filter to the image.
 
     Parameters
     ----------
