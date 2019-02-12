@@ -8,28 +8,24 @@ import numpy as np
 @dataclass
 class AnisotropyData:
     filename: str
-
     raw_data: np.ndarray
 
     parallel: np.ndarray = None
     perpendicular: np.ndarray = None
-
     parallel_cell: np.ndarray = None
     perpendicular_cell: np.ndarray = None
 
     anisotropy: np.ndarray = None
-
-    means: list = None
-    medians: list = None
-
-    means_norm: list = None
+    mean: list = None
+    median: list = None
+    mean_norm: list = None
     median_norm: list = None
 
     metadata: dict = None
 
 
 def only(file_list, keyword):
-    """Helper function to returns files from list of files that match the
+    """Helper function to return files from list of files that match the
     items in the keyword.
 
     Parameters
@@ -51,7 +47,7 @@ def only(file_list, keyword):
 
 
 def skip(file_list, keyword):
-    """Helper function to returns files from list of files that does not match
+    """Helper function to return files from list of files that does not match
     the items in the keyword.
 
     Parameters
@@ -74,8 +70,8 @@ def skip(file_list, keyword):
 
 def ls(keyword="./", only=None, skip=None):
     """Returns the path to all the files in a path as specified in the
-    keyword. If a "*" is detected in the keyword, the file list returned
-    makes use of glob to run the search.
+    keyword. If a "*" is detected in the keyword, glob is used to run the
+    search.
 
     Parameters
     ----------
@@ -113,7 +109,7 @@ def ls(keyword="./", only=None, skip=None):
 
 
 def mkdir(path):
-    """Function to make a directory.
+    """Make a directory.
 
     Parameters
     ----------
@@ -149,7 +145,8 @@ def file_exists(filename):
 
 
 def imread(filename):
-    """Wrapper for Tifffile to open images.
+    """Wrapper for Tifffile to read images as int16 and returns a dataclass
+    with the image data.
 
     Parameters
     ----------
