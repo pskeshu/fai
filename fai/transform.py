@@ -59,23 +59,23 @@ def register(dataclass):
     Parameters
     ----------
     dataclass : AnisotropyData object
-        `parallel_cell` and `perpendicular_cell` attributes of the dataclass
+        `parallel_roi` and `perpendicular_roi` attributes of the dataclass
         are used.
 
     Returns
     -------
     dataclass : AnisotropyData object
-        `perpendicular_cell_reg` attribute is populated with the registered
+        `perpendicular_roi_reg` attribute is populated with the registered
         perpendicular channel.
     """
-    parallel_cell = dataclass.parallel_cell
-    perpendicular_cell = dataclass.perpendicular_cell
+    parallel_roi = dataclass.parallel_roi
+    perpendicular_roi = dataclass.perpendicular_roi
 
     registered = []
 
-    for img1, img2 in zip(parallel_cell, perpendicular_cell):
+    for img1, img2 in zip(parallel_roi, perpendicular_roi):
         estimation = estimate(img1, img2)
         registered.append(align(estimation, img2).astype(np.int16))
 
-    dataclass.perpendicular_cell_reg = np.array(registered)
+    dataclass.perpendicular_roi_reg = np.array(registered)
     return dataclass

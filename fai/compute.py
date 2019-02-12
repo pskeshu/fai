@@ -11,7 +11,7 @@ def anisotropy(dataclass, g_factor, bg):
     Parameters
     ----------
     dataclass : AnisotropyData dataclass
-        `parallel_cell` and `perpendicular_cell_reg` attributes are used for
+        `parallel_roi` and `perpendicular_roi_reg` attributes are used for
         the anisotropy calculation.
 
     g_factor : float
@@ -31,8 +31,8 @@ def anisotropy(dataclass, g_factor, bg):
         the `anisotropy` attribute in the dataclass.
 
     """
-    parallel = dataclass.parallel_cell - bg
-    perpendicular = dataclass.perpendicular_cell_reg - bg
+    parallel = dataclass.parallel_roi - bg
+    perpendicular = dataclass.perpendicular_roi_reg - bg
 
     numerator = (parallel - (g_factor * perpendicular))
     denominator = (parallel + (2 * g_factor * perpendicular))

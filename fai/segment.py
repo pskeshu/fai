@@ -1,4 +1,4 @@
-from fai import interact, stats
+from fai import interact
 import numpy as np
 
 
@@ -52,8 +52,8 @@ def define_roi(dataclass):
     Returns
     -------
     dataclass : AnisotropyData dataclass.
-        Segmented regions are stored in the `parallel_cell` and
-        `perpendicular_cell` attributes.
+        Segmented regions are stored in the `parallel_roi` and
+        `perpendicular_roi` attributes.
 
     """
     img_parallel = dataclass.parallel
@@ -63,10 +63,27 @@ def define_roi(dataclass):
     roi_perpendicular = interact.create_rectangular_mask(
         image_perpendicular, *coords)
 
-    dataclass.parallel_cell = roi_parallel
-    dataclass.perpendicular_cell = roi_perpendicular
+    dataclass.parallel_roi = roi_parallel
+    dataclass.perpendicular_roi = roi_perpendicular
 
     metadata = dataclass.metadata
     metadata.update({"coords": coords})
 
     return dataclass
+
+def autonuclei(dataclass):
+    """Segment nucleus from an image.
+    """
+    parallel = dataclass.parallel_roi[0]
+    from fai import view
+
+    thres = process.otsu(parallel)
+
+    view.dd(parallel)
+
+    mask = parallel > thres - 60
+    mask = process.remove_small(mask, 1000)
+    mask = process.fill_holes(mask)
+
+
+    pass
