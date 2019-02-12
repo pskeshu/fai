@@ -5,16 +5,14 @@
 import numpy as np
 
 
-def anisotropy(parallel, perpendicular, g_factor, bg):
+def anisotropy(dataclass, g_factor, bg):
     """Calculate anisotropy, given an image.
 
     Parameters
     ----------
-    parallel : (N, M) numpy array
-        The parallel component of the light.
-
-    perpendicular : (N, M) numpy array
-        The perpendicular component of the light.
+    dataclass : AnisotropyData dataclass
+        `parallel_cell` and `perpendicular_cell_reg` attributes are used for
+        the anisotropy calculation.
 
     g_factor : float
         The correction factor for the bias in polarization.
@@ -28,13 +26,13 @@ def anisotropy(parallel, perpendicular, g_factor, bg):
 
     Returns
     -------
-    image : (N, M) numpy array
-        The anisotropy map, rounded off to the 3rd decimal value.
+    dataclass : AnisotropyData dataclass
+        The anisotropy map, rounded off to the 3rd decimal value is stored in
+        the `anisotropy` attribute in the dataclass.
 
     """
-
-    numerator = numerator - bg
-    denominator = denominator - bg
+    parallel = dataclass.parallel_cell - bg
+    perpendicular = dataclass.perpendicular_cell_reg - bg
 
     numerator = (parallel - (g_factor * perpendicular))
     denominator = (parallel + (2 * g_factor * perpendicular))
@@ -46,4 +44,9 @@ def anisotropy(parallel, perpendicular, g_factor, bg):
     anisotropy_map[anisotropy_map >= 1] = 0
     anisotropy_map[anisotropy_map <= 0] = 0
 
-    return np.round(anisotropy_map, 3)
+    dataclass.anisotropy = np.round(anisotropy_map, 3)
+    
+    metadata = dataclass.metadata
+    metadata.update({"bg": bg, "g_factor": g_factor})
+
+    return dataclass
