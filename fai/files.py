@@ -25,7 +25,6 @@ class AnisotropyData:
     median_norm: list = None
 
 
-
 def only(file_list, keyword):
     """Helper function to return files from list of files that match the
     items in the keyword.
@@ -185,3 +184,38 @@ def imsave(array, filename):
     with tifffile.TiffWriter(filename, bigtiff=False) as tif:
         tif.save(array)
     return
+
+
+def arsave(array, filename):
+    """Save a numpy array to disk.
+
+    Parameters
+    ----------
+    array : N-dimensional numpy array
+        Array to be saved to disk
+
+    filename : str
+        Filename for the array.
+
+    Returns
+    -------
+    None
+    """
+    np.save(filename, array)
+    return
+
+
+def arread(filename):
+    """Read a numpy array binary file from disk.
+
+    Parameters
+    ----------
+    filename : str
+        Filename for the array.
+
+    Returns
+    -------
+    array : N-dimensional numpy array
+    """
+    array = np.load(filename)
+    return array
