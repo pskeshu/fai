@@ -12,8 +12,10 @@ class AnisotropyData:
 
     parallel: np.ndarray = None
     perpendicular: np.ndarray = None
+
     parallel_cell: np.ndarray = None
     perpendicular_cell: np.ndarray = None
+    perpendicular_cell_reg: np.ndarray = None
 
     anisotropy: np.ndarray = None
     mean: list = None
