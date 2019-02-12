@@ -9,6 +9,7 @@ import numpy as np
 class AnisotropyData:
     filename: str
     raw_data: np.ndarray
+    metadata: dict
 
     parallel: np.ndarray = None
     perpendicular: np.ndarray = None
@@ -23,7 +24,6 @@ class AnisotropyData:
     mean_norm: list = None
     median_norm: list = None
 
-    metadata: dict = None
 
 
 def only(file_list, keyword):
@@ -164,7 +164,7 @@ def imread(filename):
     The images can be opened and analysed as floating point numbers.
     """
     raw_data = tifffile.imread(filename).astype(np.int16)
-    return AnisotropyData(filename=filename, raw_data=raw_data)
+    return AnisotropyData(filename=filename, raw_data=raw_data, metadata={})
 
 
 def imsave(array, filename):
