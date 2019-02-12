@@ -32,6 +32,9 @@ def separate_channels(dataclass):
     dataclass.parallel = parallel
     dataclass.perpendicular = perpendicular
 
+    metadata = dataclass.metadata
+    metadata.update({"midpoint": midpoint, "diff": diff})
+
     return dataclass
 
 
@@ -62,5 +65,8 @@ def define_roi(dataclass):
 
     dataclass.parallel_cell = roi_parallel
     dataclass.perpendicular_cell = roi_perpendicular
+
+    metadata = dataclass.metadata
+    metadata.update({"coords": coords})
 
     return dataclass
