@@ -32,18 +32,11 @@ def anisotropy(dataclass, g_factor, bg):
         the `anisotropy` attribute in the dataclass.
 
     """
-    parallel = dataclass.parallel_roi_cropped - bg
-    perpendicular = dataclass.perpendicular_roi_reg_cropped - bg
+    parallel = dataclass.parallel_roi_cropped
+    perpendicular = dataclass.perpendicular_roi_reg_cropped
 
-    numerator = (parallel - (g_factor * perpendicular))
-    denominator = (parallel + (2 * g_factor * perpendicular))
-
-    with np.errstate(divide='ignore', invalid='ignore'):
-        anisotropy_map = np.true_divide(numerator, denominator)
-        anisotropy_map[~ np.isfinite(anisotropy_map)] = 0
-
-    anisotropy_map[anisotropy_map >= 1] = 0
-    anisotropy_map[anisotropy_map <= 0] = 0
+    anisotropy_map = _calculate_anisotropy(
+        parallel, perpendicular, g_factor, bg)
 
     rounded_anisotropy = np.round(anisotropy_map, 3)
     median_filtered = process.median(rounded_anisotropy, size=3)
@@ -56,3 +49,21 @@ def anisotropy(dataclass, g_factor, bg):
     metadata.update({"bg": bg, "g_factor": g_factor})
 
     return dataclass
+
+
+def _calculate_anisotropy(parallel, perpendicular, g_factor, bg):
+    """Anisotropy is calculated here"""
+    parallel = parallel - bg
+    perpendicular = perpendicular - bg
+
+    numerator = (parallel - (g_factor * perpendicular))
+    denominator = (parallel + (2 * g_factor * perpendicular))
+
+    with np.errstate(divide='ignore', invalid='ignore'):
+        anisotropy_map = np.true_divide(numerator, denominator)
+        anisotropy_map[~ np.isfinite(anisotropy_map)] = 0
+
+    anisotropy_map[anisotropy_map >= 1] = 0
+    anisotropy_map[anisotropy_map <= 0] = 0
+
+    return anisotropy_map
