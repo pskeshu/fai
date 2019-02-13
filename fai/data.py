@@ -32,9 +32,11 @@ class AnisotropyData:
 
     # Calculated anisotropy - typically from the
     # cropped parallel and perpendicular image.
-    anisotropy: np.ndarray = None
+    anisotropy_raw: np.ndarray = None  # Raw data
+    anisotropy_round: np.ndarray = None  # Rounded to 3 decimal points
+    anisotropy_round_median: np.ndarray = None  # Median filtered
 
-    # Stats from anisotropy data
+    # Stats from anisotropy_round_median
     # For plotting
     mean: list = None
     median: list = None

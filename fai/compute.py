@@ -3,6 +3,7 @@
 #   2. np.float() vs float()
 
 import numpy as np
+from fai import process
 
 
 def anisotropy(dataclass, g_factor, bg):
@@ -44,7 +45,12 @@ def anisotropy(dataclass, g_factor, bg):
     anisotropy_map[anisotropy_map >= 1] = 0
     anisotropy_map[anisotropy_map <= 0] = 0
 
-    dataclass.anisotropy = np.round(anisotropy_map, 3)
+    rounded_anisotropy = np.round(anisotropy_map, 3)
+    median_filtered = process.median(rounded_anisotropy, size=3)
+
+    dataclass.anisotropy_raw = anisotropy_map
+    dataclass.anisotropy_round = rounded_anisotropy
+    dataclass.anisotropy_round_median = median_filtered
 
     metadata = dataclass.metadata
     metadata.update({"bg": bg, "g_factor": g_factor})
