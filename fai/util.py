@@ -40,19 +40,3 @@ def pad(list_of_images):
 
         padded_list.append(padded)
     return np.asarray(padded_list)
-
-
-def without_zero(array):
-    """Return an array without zeros.
-
-    Parameters
-    ----------
-    array : ndarray
-        Input array
-    Return
-    ------
-    array : ndarray
-        array without zeros.
-    """
-
-    return array[(array > 0)]
