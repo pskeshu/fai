@@ -2,6 +2,40 @@ import numpy as np
 from scipy import stats
 
 
+def delta(data):
+    """Difference for each datapoint with that of the 0th point. 
+
+    data_n = data_n - data_0
+
+    Parameters
+    ----------
+    data : list or array
+
+    Returns
+    -------
+    data : array
+        Normalized to 0th index.
+    """
+    return np.array([data_t - data[0] for data_t in data])
+
+
+def normalize(data):
+    """Normalize data with the 0th point. 
+
+    data_n = data_n / data_0
+
+    Parameters
+    ----------
+    data : list or array
+
+    Returns
+    -------
+    data : array
+        Normalized to 0th index.
+    """
+    return np.array([data_t/data[0] for data_t in data])
+
+
 def ignore_zero(data):
     """Returns array without zeros.
 
