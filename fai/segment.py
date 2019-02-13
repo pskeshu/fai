@@ -57,6 +57,7 @@ def define_roi(dataclass):
         `perpendicular_roi` attributes.
 
     """
+    separate_channels(dataclass)
     img_parallel = dataclass.parallel
     image_perpendicular = dataclass.perpendicular
 
