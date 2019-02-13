@@ -2,6 +2,40 @@ import numpy as np
 from scipy import stats
 
 
+def delta(data):
+    """Difference for each datapoint with that of the 0th point. 
+
+    data_n = data_n - data_0
+
+    Parameters
+    ----------
+    data : list or array
+
+    Returns
+    -------
+    data : array
+        Normalized to 0th index.
+    """
+    return np.array([data_t - data[0] for data_t in data])
+
+
+def normalize(data):
+    """Normalize data with the 0th point. 
+
+    data_n = data_n / data_0
+
+    Parameters
+    ----------
+    data : list or array
+
+    Returns
+    -------
+    data : array
+        Normalized to 0th index.
+    """
+    return np.array([data_t/data[0] for data_t in data])
+
+
 def ignore_zero(data):
     """Returns array without zeros.
 
@@ -66,9 +100,8 @@ def mean(array, without_zero=True):
     -------
     mean : float
     """
-
     if without_zero:
-        array = util.ignore_zero(array)
+        array = ignore_zero(array)
 
     return np.mean(array)
 
@@ -93,7 +126,7 @@ def median(array, without_zero=True):
 
     """
     if without_zero:
-        array = util.ignore_zero(array)
+        array = ignore_zero(array)
 
     return np.median(array)
 
@@ -119,7 +152,7 @@ def std(array, without_zero=True):
     standard deviation : float
     """
     if without_zero:
-        array = util.ignore_zero(array)
+        array = ignore_zero(array)
 
     return np.std(array)
 
@@ -146,6 +179,6 @@ def sem(array, without_zero=True):
         The standard error in mean for the given array
     """
     if without_zero:
-        array = util.ignore_zero(array)
+        array = ignore_zero(array)
 
     return stats.sem(array)
