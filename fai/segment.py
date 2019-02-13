@@ -134,7 +134,8 @@ def nuclei(dataclass):
     Updates 
     -------
     `mask_roi` : binary mask of the region of interest
-    `
+    `parallel_roi_cropped` : cropped parallel nucleus channel
+    `perpendicular_roi_reg_cropped` : cropped perpendicular nucleus channel
 
     """
 
@@ -163,7 +164,8 @@ def nuclei(dataclass):
     # containing the nuclei information alone, to the dataclass
     dataclass.mask_roi_cropped = util.pad(cropped_mask_roi)
     dataclass.parallel_roi_cropped = util.pad(cropped_parallel_roi)
-    dataclass.perpendicular_roi_reg_cropped = util.pad(cropped_perpendicular_roi)
+    dataclass.perpendicular_roi_reg_cropped = util.pad(
+        cropped_perpendicular_roi)
 
     return dataclass
 
