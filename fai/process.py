@@ -70,7 +70,7 @@ def remove_small(image, min_size=5, **kwds):
     return morphology.remove_small_objects(image, min_size, **kwds)
 
 
-def clear(image, **kwds):
+def clear_border(image, **kwds):
     """Clear objects that are touching the image boundary.
 
     Parameters
