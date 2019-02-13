@@ -40,3 +40,28 @@ def pad(list_of_images):
 
         padded_list.append(padded)
     return np.asarray(padded_list)
+
+
+def iterate(func, iterable, **kwds):
+    """Iterate through an iterable, and use as values for the given
+    function. Similar to map().
+
+    Parameters
+    ----------
+    func : function
+
+    iterable : list or array
+
+    kwds : optional kwds to pass to function
+
+    Return
+    ------
+    values : list
+        list of values returned by the function for elements in iterable
+    """
+    values = []
+
+    for i in iterable:
+        values.append(func(i, **kwds))
+
+    return values
