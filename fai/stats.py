@@ -48,7 +48,7 @@ def pearson(x, y, without_zero=True):
     return stats.pearsonr(x, y)
 
 
-def mean(array, without_zero=True, roundval=None):
+def mean(array, without_zero=True):
     """Calculate the mean value of an array.
 
     Parameters
@@ -62,26 +62,18 @@ def mean(array, without_zero=True, roundval=None):
         if `without_zero` is False
             mean of all the values of the array, including the zeros.
 
-    roundval : int
-        Round off the decimal points of the output.
-
     Returns
     -------
     mean : float
     """
 
-    array = np.float(array)
-
     if without_zero:
         array = util.ignore_zero(array)
-
-    if roundval is not None:
-        return round(np.mean(array), roundval)
 
     return np.mean(array)
 
 
-def median(array, without_zero=True, roundval=None):
+def median(array, without_zero=True):
     """Calculate the median value of an array.
 
     Parameters
@@ -95,21 +87,13 @@ def median(array, without_zero=True, roundval=None):
         if `without_zero` is False
             median of all the values of the array, including the zeros.
 
-    roundval : int
-        Round off the decimal points of the output.
-
     Returns
     -------
     median : float
 
     """
-    array = np.float(array)
-
     if without_zero:
         array = util.ignore_zero(array)
-
-    if roundval is not None:
-        return round(np.median(array), roundval)
 
     return np.median(array)
 
@@ -130,20 +114,12 @@ def std(array, without_zero=True):
             standard deviation of all the values of the array, including
             the zeros.
 
-    roundval : int
-        Round off the decimal points of the output.
-
     Returns
     -------
     standard deviation : float
     """
-    array = np.float(array)
-
     if without_zero:
         array = util.ignore_zero(array)
-
-    if roundval is not None:
-        return round(np.std(array), roundval)
 
     return np.std(array)
 
@@ -164,20 +140,12 @@ def sem(array, without_zero=True):
             standard error of all the values of the array, including
             the zeros.
 
-    roundval : int
-        Round off the decimal points of the output.
-
     Returns
     -------
     standard error : float
         The standard error in mean for the given array
     """
-    array = np.float(array)
-
     if without_zero:
         array = util.ignore_zero(array)
-
-    if roundval is not None:
-        return round(stats.sem(array), roundval)
 
     return stats.sem(array)
