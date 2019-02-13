@@ -29,7 +29,7 @@ def anisotropy(dataclass, g_factor, bg):
     -------
     dataclass : AnisotropyData dataclass
         The anisotropy map, rounded off to the 3rd decimal value is stored in
-        the `anisotropy` attribute in the dataclass.
+        the `anisotropy_raw` attribute in the dataclass.
 
     """
     parallel = dataclass.parallel_roi_cropped
