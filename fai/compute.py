@@ -34,9 +34,11 @@ def anisotropy(dataclass, g_factor, bg):
     """
     parallel = dataclass.parallel_roi_cropped
     perpendicular = dataclass.perpendicular_roi_reg_cropped
+    mask = dataclass.mask_roi_cropped
 
-    anisotropy_map = _calculate_anisotropy(
-        parallel, perpendicular, g_factor, bg)
+    anisotropy_map = _calculate_anisotropy(mask,
+                                           parallel, perpendicular,
+                                           g_factor, bg)
 
     rounded_anisotropy = np.round(anisotropy_map, 3)
     median_filtered = process.median(rounded_anisotropy, size=3)
@@ -53,10 +55,18 @@ def anisotropy(dataclass, g_factor, bg):
     return dataclass
 
 
-def _calculate_anisotropy(parallel, perpendicular, g_factor, bg):
+def _calculate_anisotropy(mask, parallel, perpendicular, g_factor, bg):
     """Anisotropy is calculated here"""
+
+    # bg is also subtracted from regions outside the nucleus, which makes it
+    # -100, resulting in incorrect anisotropy
     parallel = parallel - bg
     perpendicular = perpendicular - bg
+
+    # To fix the above problem:
+    # multiplied with nuclear RoI mask to set the outside nuclear region to 0.
+    parallel = parallel * mask
+    perpendicular = perpendicular * mask
 
     numerator = (parallel - (g_factor * perpendicular))
     denominator = (parallel + (2 * g_factor * perpendicular))
