@@ -1,57 +1,8 @@
-from dataclasses import dataclass
 import os
 import glob
 import tifffile
 import numpy as np
-
-
-@dataclass
-class AnisotropyData:
-    filename: str
-    raw_data: np.ndarray
-    metadata: dict
-
-    # The raw parallel and perpendicular channels
-    parallel: np.ndarray = None
-    perpendicular: np.ndarray = None
-
-    # Region of interest is generally drawn manually
-    # around a nucleus. The perpendicular component
-    # is registered, with respect to the parallel
-    # component which is kept fixed in position.
-    parallel_roi: np.ndarray = None
-    perpendicular_roi: np.ndarray = None
-    perpendicular_roi_reg: np.ndarray = None
-
-    # Segmented binary mask from parallel_roi
-    mask_roi: np.ndarray = None
-
-    # Cropped binary mask - nucleus in a bounding box
-    mask_roi_cropped: np.ndarray = None
-
-    # Cropped parallel and perpendicular image
-    parallel_roi_cropped: np.ndarray = None
-    perpendicular_roi_reg_cropped: np.ndarray = None
-
-    # Calculated anisotropy - typically from the
-    # cropped parallel and perpendicular image.
-    anisotropy: np.ndarray = None
-
-    # Stats from anisotropy data
-    # For plotting
-    mean: list = None
-    median: list = None
-    mean_norm: list = None
-    median_norm: list = None
-
-    # If we are multiplexing, with a second fluorophore
-    # For instance, two color live imaging of cb.
-    secondary_parallel: np.ndarray = None
-    secondary_perpendicular: np.ndarray = None
-
-    secondary_parallel_roi: np.ndarray = None
-    secondary_perpendicular_roi: np.ndarray = None
-
+from fai import data
 
 def only(file_list, keyword):
     """Helper function to return files from list of files that match the
@@ -191,7 +142,7 @@ def imread(filename):
     The images can be opened and analysed as floating point numbers.
     """
     raw_data = tifffile.imread(filename).astype(np.int16)
-    return AnisotropyData(filename=filename, raw_data=raw_data, metadata={})
+    return data.AnisotropyData(filename=filename, raw_data=raw_data, metadata={})
 
 
 def imsave(array, filename):
