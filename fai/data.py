@@ -39,8 +39,6 @@ class AnisotropyData:
     # Stats from anisotropy_round_median for plotting line curves.
     mean: list = None
     median: list = None
-    std: list = None
-    sem: list = None
 
     # r_t - r_0
     mean_delta: list = None
