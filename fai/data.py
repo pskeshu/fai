@@ -36,10 +36,17 @@ class AnisotropyData:
     anisotropy_round: np.ndarray = None  # Rounded to 3 decimal points
     anisotropy_round_median: np.ndarray = None  # Median filtered
 
-    # Stats from anisotropy_round_median
-    # For plotting
+    # Stats from anisotropy_round_median for plotting line curves.
     mean: list = None
     median: list = None
+    std: list = None
+    sem: list = None
+
+    # r_t - r_0
+    mean_delta: list = None
+    median_delta: list = None
+
+    # r_t/r_0
     mean_norm: list = None
     median_norm: list = None
 
