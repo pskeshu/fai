@@ -2,40 +2,6 @@ import numpy as np
 from scipy import stats
 
 
-def delta(data):
-    """Difference for each datapoint with that of the 0th point. 
-
-    data_n = data_n - data_0
-
-    Parameters
-    ----------
-    data : list or array
-
-    Returns
-    -------
-    data : array
-        Normalized to 0th index.
-    """
-    return np.array([data_t - data[0] for data_t in data])
-
-
-def normalize(data):
-    """Normalize data with the 0th point. 
-
-    data_n = data_n / data_0
-
-    Parameters
-    ----------
-    data : list or array
-
-    Returns
-    -------
-    data : array
-        Normalized to 0th index.
-    """
-    return np.array([data_t/data[0] for data_t in data])
-
-
 def ignore_zero(data):
     """Returns array without zeros.
 
@@ -51,7 +17,7 @@ def ignore_zero(data):
     return data[np.nonzero(data)]
 
 
-def pearson(x, y, without_zero=False):
+def pearson(x, y, without_zero=True):
     """Calculate the Pearson's correlation coefficient (PCC).
 
     Parameters
@@ -61,7 +27,7 @@ def pearson(x, y, without_zero=False):
     y : (N,) array
 
     without_zero : bool
-        if `without_zero` is True:
+        if `without_zero` is True (default)
             PCC for the array, without counting the zeros.
 
         if `without_zero` is False
@@ -82,7 +48,7 @@ def pearson(x, y, without_zero=False):
     return stats.pearsonr(x, y)
 
 
-def mean(array, without_zero=False, roundval=None):
+def mean(array, without_zero=True, roundval=None):
     """Calculate the mean value of an array.
 
     Parameters
@@ -90,7 +56,7 @@ def mean(array, without_zero=False, roundval=None):
     array : (N, M) numpy array
 
     without_zero : bool
-        if `without_zero` is True:
+        if `without_zero` is True (default)
             mean of all the values of the array, without counting the zeros.
 
         if `without_zero` is False
@@ -115,7 +81,7 @@ def mean(array, without_zero=False, roundval=None):
     return np.mean(array)
 
 
-def median(array, without_zero=False, roundval=None):
+def median(array, without_zero=True, roundval=None):
     """Calculate the median value of an array.
 
     Parameters
@@ -123,7 +89,7 @@ def median(array, without_zero=False, roundval=None):
     array : (N, M) numpy array
 
     without_zero : bool
-        if `without_zero` is True:
+        if `without_zero` is True (default)
             median of all the values of the array, without counting the zeros.
 
         if `without_zero` is False
@@ -148,7 +114,7 @@ def median(array, without_zero=False, roundval=None):
     return np.median(array)
 
 
-def std(array):
+def std(array, without_zero=True):
     """Calculate the standard deviation value of an array.
 
     Parameters
@@ -156,7 +122,7 @@ def std(array):
     array : (N, M) numpy array
 
     without_zero : bool
-        if `without_zero` is True:
+        if `without_zero` is True (default)
             standard deviation of all the values of the array, without
             counting the zeros.
 
@@ -182,7 +148,7 @@ def std(array):
     return np.std(array)
 
 
-def sem(array, without_zero=False):
+def sem(array, without_zero=True):
     """Calculate the standard error in mean for an array.
 
     Parameters
@@ -190,7 +156,7 @@ def sem(array, without_zero=False):
     array : (N,) numpy array
 
     without_zero : bool
-        if `without_zero` is True:
+        if `without_zero` is True (default)
             standard error of all the values of the array, without
             counting the zeros.
 
