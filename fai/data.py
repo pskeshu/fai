@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import numpy as np
+import pickle
 
 
 @dataclass
@@ -55,3 +56,38 @@ class AnisotropyData:
 
     secondary_parallel_roi: np.ndarray = None
     secondary_perpendicular_roi: np.ndarray = None
+
+
+def save(dataclass_object, filename):
+    """Save the pickled dataclass object to a file.
+
+    Parameters
+    ----------
+    dataclass_object : dataclass
+        dataclass to be pickled and saved to disk
+
+    filename : str
+
+    Returns
+    -------
+    None
+    """
+    with open(filename, "wb") as file:
+        pickle.dump(dataclass_object, file)
+    return
+
+
+def load(filename):
+    """Load the dataclass object from a file.
+
+    Parameters
+    ----------
+    filename : str
+
+    Returns
+    -------
+    data : dataclass object
+    """
+    with open(filename, "rb") as file:
+        data = pickle.load(file)
+    return data
