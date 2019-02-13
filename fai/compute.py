@@ -11,8 +11,8 @@ def anisotropy(dataclass, g_factor, bg):
     Parameters
     ----------
     dataclass : AnisotropyData dataclass
-        `parallel_roi` and `perpendicular_roi_reg` attributes are used for
-        the anisotropy calculation.
+        `parallel_roi_cropped` and `perpendicular_roi_reg_cropped` attributes are
+        used for the anisotropy calculation.
 
     g_factor : float
         The correction factor for the bias in polarization.
@@ -31,8 +31,8 @@ def anisotropy(dataclass, g_factor, bg):
         the `anisotropy` attribute in the dataclass.
 
     """
-    parallel = dataclass.parallel_roi - bg
-    perpendicular = dataclass.perpendicular_roi_reg - bg
+    parallel = dataclass.parallel_roi_cropped - bg
+    perpendicular = dataclass.perpendicular_roi_reg_cropped - bg
 
     numerator = (parallel - (g_factor * perpendicular))
     denominator = (parallel + (2 * g_factor * perpendicular))
@@ -45,7 +45,7 @@ def anisotropy(dataclass, g_factor, bg):
     anisotropy_map[anisotropy_map <= 0] = 0
 
     dataclass.anisotropy = np.round(anisotropy_map, 3)
-    
+
     metadata = dataclass.metadata
     metadata.update({"bg": bg, "g_factor": g_factor})
 

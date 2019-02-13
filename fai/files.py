@@ -23,10 +23,10 @@ class AnisotropyData:
     perpendicular_roi: np.ndarray = None
     perpendicular_roi_reg: np.ndarray = None
 
-    # Segmented binary mask
+    # Segmented binary mask from parallel_roi
     mask_roi: np.ndarray = None
 
-    # Cropped binary mask
+    # Cropped binary mask - nucleus in a bounding box
     mask_roi_cropped: np.ndarray = None
 
     # Cropped parallel and perpendicular image
@@ -34,7 +34,7 @@ class AnisotropyData:
     perpendicular_roi_reg_cropped: np.ndarray = None
 
     # Calculated anisotropy - typically from the
-    # sliced parallel and perpendicular image.
+    # cropped parallel and perpendicular image.
     anisotropy: np.ndarray = None
 
     # Stats from anisotropy data
