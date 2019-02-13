@@ -166,7 +166,10 @@ def nuclei(dataclass):
     dataclass.parallel_roi_cropped = util.pad(cropped_parallel_roi)
     dataclass.perpendicular_roi_reg_cropped = util.pad(
         cropped_perpendicular_roi)
-
+    
+    # Update slice information to metadata
+    metadata = dataclass.metadata
+    metadata.update({"slice": [z, x, y]})
     return dataclass
 
 
@@ -186,4 +189,5 @@ def crop_mask(mask):
     """
     labelled_mask = ndi.label(mask)[0]
     slice_ = ndi.find_objects(labelled_mask, max_label=1)[0]
+
     return slice_
