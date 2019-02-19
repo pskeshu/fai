@@ -68,19 +68,22 @@ class PlotLines:
         self.ax.axhline(mean_value[0], c="k", linewidth=1, linestyle="--")
         return self.ax
 
+    def save(self, savename):
+        plt.tight_layout()
+        plt.savefig(savename)
+        plt.close()
+
 
 def plot_all(list_of_dataclass, treatment, plotdir="./plots"):
     data = data_for_all_plots(list_of_dataclass)
+    files.mkdir(plotdir)
 
     for savename in data:
         ylabel, ydata = data[savename]
-        ax = PlotLines(ydata, ylabel).average_plot()
-        plt.tight_layout()
-        files.mkdir(plotdir)
-        plt.savefig(f"{plotdir}/{savename}_average")
-        plt.close()
+        average = PlotLines(ydata, ylabel)
+        ax = average.average_plot()
+        average.save(f"{plotdir}/{savename}_average")
 
-        ax = PlotLines(ydata, ylabel).scatter_plot()
-        plt.tight_layout()
-        plt.savefig(f"{plotdir}/{savename}")
-        plt.close()
+        scatter = PlotLines(ydata, ylabel)
+        ax = scatter.scatter_plot()
+        scatter.save(f"{plotdir}/{savename}")
