@@ -1,4 +1,4 @@
-from fai import stats
+from fai import stats, files
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
@@ -7,87 +7,7 @@ matplotlib.rc('savefig', dpi=300, bbox="tight", pad_inches=0)
 matplotlib.rc('font', size=20)
 
 
-def scatter_plot(ax, list_of_means):
-    time = np.arange(len(list_of_means[0])) * 5
-    ax.set_xlabel("Time")
-    ax.set_xticks([0, 60, 120])
-
-    for mean in list_of_means:
-        ax.plot(time, mean)
-        ax.scatter(time, mean, s=5)
-
-    return ax
-
-
-def error_plot(ax, list_of_means):
-    time = np.arange(len(list_of_means[0])) * 5
-    ax.set_xlabel("Time")
-
-    mean_value = np.mean(list_of_means, axis=0)
-    error_value = stats.sem(list_of_means)
-
-    ax.errorbar(time, mean_value, yerr=error_value, capthick=2)
-    ax.set_xticks([0, 60, 120])
-
-    return ax
-
-
-def delta_mean_anisotropy(all_mean_delta, treatment, savename, error=False):
-    fig, ax = plt.subplots()
-    num = len(all_mean_delta)
-
-    ax.set(ylabel=r"$\Delta$ Anisotropy",
-           title=f"{treatment} N : {num}")
-
-    ax.axhline(0, c="k", linewidth=1, linestyle="--")
-
-    if error:
-        ax = error_plot(ax, all_mean_delta)
-        savename += "_error"
-    else:
-        ax = scatter_plot(ax, all_mean_delta)
-
-    plt.savefig(f"{savename}")
-    plt.close()
-
-
-def mean_anisotropy(all_mean, treatment, savename, error=False):
-    fig, ax = plt.subplots()
-    num = len(all_mean)
-
-    ax.set(ylabel="Mean Anisotropy",
-           title=f"{treatment} N : {num}")
-
-    if error:
-        ax = error_plot(ax, all_mean)
-        savename += "_error"
-    else:
-        ax = scatter_plot(ax, all_mean)
-
-    plt.savefig(f"{savename}")
-    plt.close()
-
-
-def norm_mean_anisotropy(all_mean_norm, treatment, savename, error=False):
-    fig, ax = plt.subplots()
-    num = len(all_mean_norm)
-
-    ax.set(ylabel=r"$r_t/r_0$",
-           title=f"{treatment} N : {num}")
-
-    ax.axhline(1, c="k", linewidth=1, linestyle="--")
-
-    if error:
-        ax = error_plot(ax, all_mean_norm)
-        savename += "_error"
-    else:
-        ax = scatter_plot(ax, all_mean_norm)
-
-    plt.savefig(f"{savename}")
-    plt.close()
-
-
-def plot_all(list_of_dataclass):
+def data_for_all_plots(list_of_dataclass):
     n_mean = []
     n_delta_mean = []
     n_norm_mean = []
@@ -96,6 +16,8 @@ def plot_all(list_of_dataclass):
     n_std = []
 
     for dataclass in list_of_dataclass:
+        if len(dataclass.mean) != 27:
+            continue
         n_mean.append(dataclass.mean)
         n_delta_mean.append(dataclass.mean_delta)
         n_norm_mean.append(dataclass.mean_norm)
@@ -105,7 +27,60 @@ def plot_all(list_of_dataclass):
         ks_ = []
         std_ = []
         for amap in amaps:
-            ks_.append(stats.ks(amap))
+            ks_.append(stats.ks(amaps[0], amap)[0])
             std_.append(stats.std(amap))
         n_ks.append(ks_)
         n_std.append(std_)
+
+    data = {
+        "mean": ["Mean Anisotropy", n_mean],
+        "delta": [r"$\Delta$ Anisotropy", n_delta_mean],
+        "norm": [r"$r_t/r_0$", n_norm_mean],
+        "ks": ["KS (0, t)", n_ks],
+        "sd": ["SD Anisotropy", n_std],
+    }
+
+    return data
+
+
+class PlotLines:
+    def __init__(self, list_of_means, ylabel):
+        self.fig, self.ax = plt.subplots()
+        self.ax.set_xlabel("Time")
+        self.ax.set_ylabel(ylabel)
+        self.ax.set_xticks([0, 60, 120])
+        self.list_of_means = list_of_means
+        self.time = np.arange(27) * 5
+
+    def scatter_plot(self):
+        starting_num = self.list_of_means[0][0]
+        if starting_num in [0, 1]:
+            self.ax.axhline(starting_num, c="k", linewidth=1, linestyle="--")
+        for mean in self.list_of_means:
+            self.ax.plot(self.time, mean)
+            self.ax.scatter(self.time, mean, s=5)
+        return self.ax
+
+    def average_plot(self):
+        mean_value = stats.mean(self.list_of_means, without_zero=False, axis=0)
+        error_value = stats.sem(self.list_of_means, without_zero=False, axis=0)
+        self.ax.errorbar(self.time, mean_value, yerr=error_value, capthick=2)
+        self.ax.axhline(mean_value[0], c="k", linewidth=1, linestyle="--")
+        return self.ax
+
+
+def plot_all(list_of_dataclass, treatment, plotdir="./plots"):
+    data = data_for_all_plots(list_of_dataclass)
+
+    for savename in data:
+        ylabel, ydata = data[savename]
+        ax = PlotLines(ydata, ylabel).average_plot()
+        plt.tight_layout()
+        files.mkdir(plotdir)
+        plt.savefig(f"{plotdir}/{savename}_average")
+        plt.close()
+
+        ax = PlotLines(ydata, ylabel).scatter_plot()
+        plt.tight_layout()
+        plt.savefig(f"{plotdir}/{savename}")
+        plt.close()
