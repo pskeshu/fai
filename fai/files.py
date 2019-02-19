@@ -4,7 +4,8 @@ import tifffile
 import numpy as np
 from fai import data
 
-def only(file_list, keyword):
+
+def ls_only(file_list, keyword):
     """Helper function to return files from list of files that match the
     items in the keyword.
 
@@ -26,7 +27,7 @@ def only(file_list, keyword):
     return sorted(list_)
 
 
-def skip(file_list, keyword):
+def ls_skip(file_list, keyword):
     """Helper function to return files from list of files that does not match
     the items in the keyword.
 
@@ -80,10 +81,10 @@ def ls(keyword="./", only=None, skip=None):
             file_list.append(os.path.join(paths, name))
 
     if only is not None:
-        file_list = only(file_list, only)
+        file_list = ls_only(file_list, only)
 
     if skip is not None:
-        file_list = skip(file_list, skip)
+        file_list = ls_skip(file_list, skip)
 
     return sorted(file_list)
 
@@ -142,7 +143,9 @@ def imread(filename):
     The images can be opened and analysed as floating point numbers.
     """
     raw_data = tifffile.imread(filename).astype(np.int16)
-    return data.AnisotropyData(filename=filename, raw_data=raw_data, metadata={})
+    return data.AnisotropyData(filename=filename,
+                               raw_data=raw_data,
+                               metadata={})
 
 
 def imsave(array, filename):
