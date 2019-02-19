@@ -1,4 +1,4 @@
-import scipy.stats as stats
+from fai import stats
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
@@ -85,3 +85,27 @@ def norm_mean_anisotropy(all_mean_norm, treatment, savename, error=False):
 
     plt.savefig(f"{savename}")
     plt.close()
+
+
+def plot_all(list_of_dataclass):
+    n_mean = []
+    n_delta_mean = []
+    n_norm_mean = []
+
+    n_ks = []
+    n_std = []
+
+    for dataclass in list_of_dataclass:
+        n_mean.append(dataclass.mean)
+        n_delta_mean.append(dataclass.mean_delta)
+        n_norm_mean.append(dataclass.mean_norm)
+
+        amaps = dataclass.anisotropy_round_median
+
+        ks_ = []
+        std_ = []
+        for amap in amaps:
+            ks_.append(stats.ks(amap))
+            std_.append(stats.std(amap))
+        n_ks.append(ks_)
+        n_std.append(std_)
