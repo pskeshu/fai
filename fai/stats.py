@@ -182,3 +182,25 @@ def sem(array, without_zero=True):
         array = ignore_zero(array)
 
     return stats.sem(array)
+
+
+def ks(image1, image2):
+    """Computes the Kolmogorov-Smirnov statistic on 2 samples.
+
+    Parameters
+    ----------
+    image1, image2 : ndarray
+        data for which KS-stats is to be calculated
+
+    Returns
+    -------
+    D : float
+        KS statistic
+    p-value : float
+        two-tailed p-value
+
+    """
+    image1_without_zero = ignore_zero(image1)
+    image2_without_zero = ignore_zero(image2)
+
+    return stats.ks_2samp(image1_without_zero, image2_without_zero)
