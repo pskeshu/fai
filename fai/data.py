@@ -1,3 +1,4 @@
+import csv
 from dataclasses import dataclass
 import numpy as np
 import pickle
@@ -27,15 +28,16 @@ class AnisotropyData:
     # Cropped binary mask - nucleus in a bounding box
     mask_roi_cropped: np.ndarray = None
 
-    # Cropped parallel and perpendicular image
+    # Cropped parallel and perpendicular image that is
+    # used to calculate anisotropy
     parallel_roi_cropped: np.ndarray = None
     perpendicular_roi_reg_cropped: np.ndarray = None
 
-    # Calculated anisotropy - typically from the
-    # cropped parallel and perpendicular image.
+    # Calculated anisotropy
     anisotropy_raw: np.ndarray = None  # Raw data
     anisotropy_round: np.ndarray = None  # Rounded to 3 decimal points
-    anisotropy_round_median: np.ndarray = None  # Median filtered
+    # Median filtered after calculating anisotropy
+    anisotropy_round_median: np.ndarray = None
 
     # Stats from anisotropy_round_median for plotting line curves.
     mean: list = None
@@ -77,12 +79,16 @@ def save(dataclass_object, filename):
     return
 
 
-def load(filename):
-    """Load the dataclass object from a file.
+def read(filename, minimal=True):
+    """Read the dataclass object from a file.
 
     Parameters
     ----------
     filename : str
+
+    minimal : bool
+        Sets some of the dataclass attributes to `None`
+        to reduce the amount of data stored in memory
 
     Returns
     -------
@@ -90,4 +96,38 @@ def load(filename):
     """
     with open(filename, "rb") as file:
         data = pickle.load(file)
+
+    if minimal:
+        data.parallel = None
+        data.parallel_roi = None
+
+        data.perpendicular = None
+        data.perpendicular_roi = None
+        data.perpendicular_roi_reg = None
+
+        data.mask_roi = None
+        data.mask_roi_cropped = None
     return data
+
+
+def write_to_csv(lists, filename):
+    """Write lists to a csv file.
+
+    Parameters
+    ----------
+    lists : list of lists
+
+    filename : str
+
+    Returns
+    -------
+    None
+    """
+    column_transformed = np.array(lists).T
+
+    with open(filename, 'w') as csvfile:
+        wr = csv.writer(csvfile)
+        for column in column_transformed:
+            wr.writerow(column)
+
+    return
