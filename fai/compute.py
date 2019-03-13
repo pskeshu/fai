@@ -4,6 +4,7 @@
 
 import numpy as np
 from fai import process, stats, util
+import warnings
 
 
 def anisotropy(dataclass, g_factor, bg):
@@ -32,6 +33,10 @@ def anisotropy(dataclass, g_factor, bg):
         the `anisotropy_raw` attribute in the dataclass.
 
     """
+
+    if bg is not 100:
+        warnings.warn("Background value should be 100")
+
     # read the raw data
     parallel = dataclass.parallel_roi_cropped
     perpendicular = dataclass.perpendicular_roi_reg_cropped
